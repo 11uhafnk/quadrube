@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 //    /        /        /
@@ -14,7 +15,7 @@ import (
 //
 
 type box interface {
-	Move(direction _Direction)
+	Move(plane _Plane)
 	Get() string
 }
 
@@ -23,17 +24,15 @@ type Side struct {
 	colors Color
 }
 
-// Move description
+// Move for side box need only first direction
 func (s *Side) Move(
-	direction _Direction,
+	plane _Plane,
 ) {
-	fmt.Printf("\nmove to %v\n", direction)
-
-	for ii := 0; ii < dimension; ii++ {
-		if direction = direction & _Direction(dimensionMask); direction == 0 {
-			fmt.Printf("not direction for move %v\n", direction)
-			return
-		}
+	fmt.Printf("\nmove to %v\n", plane)
+	direction := plane[0]
+	if !direction.Check() {
+		fmt.Printf("wrong direction for move %v\n", direction)
+		return
 	}
 
 	if direction&s.colors.orientation != 0 ||
@@ -55,33 +54,121 @@ func (s *Side) Get() string {
 
 // Edge ...
 type Edge struct {
+	colors []Color
 }
 
 // Move description
 func (e *Edge) Move(
-	direction _Direction,
+	plane _Plane,
 ) {
-	fmt.Printf("move to %08b\n", direction)
+	fmt.Printf("\nmove to %v\n", plane)
+	if !plane.Check() {
+		fmt.Printf("wrong rotate plane %v\n", plane)
+		return
+	}
+
+	if len(e.colors) < 2 {
+		panic(fmt.Errorf("edge haven't 2 sides"))
+	}
+
+	fmt.Println("OLD:", e.Get())
+
+	inner0 := -1
+	inner1 := -1
+	for ii := range e.colors {
+		//  /   /   /
+		// *---*---*
+		// |   |   | /        ^         ^ -->
+		// *---*---X      -->/    or   /       isn't correct
+		// |   |   | /
+		// *---*---*
+		//
+		// если блок показывает цыет в какую-то сторону, то это крайнее положение
+		// нельзя двигать бокс дальше в этом направлении
+		if plane[0]&e.colors[ii].orientation != 0 ||
+			plane[1]&e.colors[ii].orientation != 0 {
+			fmt.Printf("edge box cann't move to this posistion curent %v move to %v\n", e.Get(), plane)
+			return
+		}
+
+		//  /   /   /   inner                /   /   /  outer          Y
+		// *---*---*                        *---X---*                  ^   ^ Z
+		// |   |   | /        ^             |   |   | /       ^        |  /
+		// X---*---*      -->/      else    *---*---*     -->/         | /
+		// |   |   | /                      |   |   | /                |/
+		// *---*---*                        *---X---*                  *------> X
+		//
+		// X+ Z+                               X+ Z+
+		// !X , !Z -> !Z , X
+		//  ^    ^ inner1
+		//  inner0   because move order
+		if e.colors[ii].orientation&plane[0].Reverse() != 0 {
+			inner0 = ii
+		}
+		if e.colors[ii].orientation&plane[1].Reverse() != 0 {
+			inner1 = ii
+		}
+	}
+
+	if inner0 != -1 && inner1 != -1 {
+		e.colors[inner0].orientation, e.colors[inner1].orientation = e.colors[inner1].orientation, plane[0]
+	} else if inner0 != -1 { // outer
+		// не может быть, потому что тогда это или полное попадание в область вращения
+		// или неправильное направление вращения
+		fmt.Printf("!!! inner0\n")
+	} else if inner1 != -1 { // outer
+		e.colors[inner1].orientation = plane[0]
+	} else {
+		// nothing
+		// need change sides only at the rotating plane
+
+	}
+
+	fmt.Println("NEW:", e.Get())
+
 }
 
 // Get description
 func (e *Edge) Get() string {
-	return ""
+	builder := strings.Builder{}
+	builder.WriteString("[ ")
+	for ii := range e.colors {
+		if ii != 0 {
+			builder.WriteString(", ")
+		}
+		builder.WriteString(e.colors[ii].String())
+	}
+	builder.WriteString("]")
+
+	return builder.String()
 }
 
 // Vertex ...
 type Vertex struct {
+	colors []Color
 }
 
 // Move description
 func (v *Vertex) Move(
-	direction int,
-	increase bool,
+	plane _Plane,
 ) {
-	fmt.Printf("move to %08b\n", direction)
+	fmt.Printf("\nmove to %v\n", plane)
+	if !plane.Check() {
+		return
+	}
 }
 
 // Get description
 func (v *Vertex) Get() string {
-	return "⸢⸣⸤⸥⸠⸡"
+	builder := strings.Builder{}
+	builder.WriteString("[ ")
+	for ii := range v.colors {
+		if ii != 0 {
+			builder.WriteString(", ")
+		}
+		builder.WriteString(v.colors[ii].String())
+	}
+	builder.WriteString("]")
+
+	return builder.String()
 }

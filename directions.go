@@ -77,12 +77,36 @@ func (d _Direction) Reverse() _Direction {
 }
 
 func (d _Direction) Check() bool {
-	for ii := 0; ii < dimension; ii++ {
-		if d&directionX != 0 && d&directionNX != 0 {
-			return false
-		}
-		d >>= 2
+
+	d &= _Direction(dimensionMask)
+	if d == 0 {
+		return false
 	}
 
-	return true
+	cnt := 0
+	for ii := 0; ii < dimension*2; ii++ {
+		if d&directionX != 0 {
+			cnt++
+		}
+		d >>= 1
+	}
+
+	return cnt == 1
+}
+
+type _Plane [2]_Direction
+
+func (p _Plane) Check() bool {
+
+	if p[0]&p[1] != 0 {
+		return false
+	}
+
+	xor := p[0] ^ p[1]
+	for ii := 0; ii < dimension; ii++ {
+		if xor == directions[ii] {
+			return false
+		}
+	}
+	return p[0].Check() && p[1].Check()
 }

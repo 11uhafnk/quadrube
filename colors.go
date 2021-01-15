@@ -4,24 +4,24 @@ import (
 	"strconv"
 )
 
-type color int
+type _Color int
 
-func (c color) String() string {
+func (c _Color) String() string {
 	letter := strconv.Itoa(int(c))
 	return "\033[0;3" + letter + "m" + letter + "\033[0;39m"
 }
 
-func (c color) Brush() string {
+func (c _Color) Brush() string {
 	letter := strconv.Itoa(int(c))
 	return "\033[0;3" + letter + "m"
 }
-func (c color) CLear() string {
+func (c _Color) CLear() string {
 	return "\033[0;39m"
 }
 
 // Colors
 const (
-	ColorBlack color = iota
+	ColorBlack _Color = iota
 	ColorRed
 	ColorGreen
 	ColorYellow
@@ -35,7 +35,7 @@ const (
 
 // Color ...
 type Color struct {
-	color       color
+	color       _Color
 	orientation _Direction
 }
 

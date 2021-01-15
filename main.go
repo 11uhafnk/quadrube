@@ -10,29 +10,48 @@ func panicOnError(err error) {
 
 func main() {
 
-	b := Side{
-		colors: Color{ColorGreen, directionNY},
+	newb := func() box {
+		return &Edge{
+			colors: []Color{
+				{ColorGreen, directionNX},
+				{ColorRed, directionNZ},
+			},
+		}
 	}
 
-	d := directionX | directionNY | directionV
+	// p := _Plane{directionY, directionNX | directionX}
 
-	fmt.Println(d.Check())
-	return
+	// fmt.Println(p[0].Check(), p[0])
+	// fmt.Println(p[1].Check(), p[1])
+	// fmt.Println(p.Check(), p)
+	// return
 
+	b := newb()
 	fmt.Println(b.Get())
 
-	b.Move(directionZ | directionNX)
+	fmt.Printf("\nWrong:")
+	b.Move([2]_Direction{directionX, directionX})
+	b = newb()
+	b.Move([2]_Direction{directionNX, directionX})
+	fmt.Printf("\n")
 
-	b.Move(directionX)
-	b.Move(directionY)
-	b.Move(directionNX)
-	b.Move(directionZ)
-	b.Move(directionNY)
-	b.Move(directionNZ)
-	b.Move(directionV)
-	b.Move(directionNV)
+	fmt.Printf("\nInner:")
+	b = newb()
+	b.Move([2]_Direction{directionX, directionZ})
+	b = newb()
+	b.Move([2]_Direction{directionX, directionNZ})
+	b = newb()
+	b.Move([2]_Direction{directionZ, directionX})
 
-	fmt.Println(b.Get())
+	fmt.Printf("\nOuter:")
+	b = newb()
+	b.Move([2]_Direction{directionY, directionZ})
+	b = newb()
+	b.Move([2]_Direction{directionNY, directionZ})
+	b = newb()
+	b.Move([2]_Direction{directionY, directionX})
+	b = newb()
+	b.Move([2]_Direction{directionNY, directionX})
 
 	fmt.Printf("\n")
 
