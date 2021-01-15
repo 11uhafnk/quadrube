@@ -2,70 +2,19 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 )
 
-// 3    1    2
-//  V   Y   Z
-//   ^  ^  ^
-//    \ | /
-//     \|/
-//      ------> X - 0
-
-var (
-	dimension = 3
-
-	size = 2
-)
-
-type color int
-
-func (c color) String() string {
-	letter := strconv.Itoa(int(c))
-	return "\033[0;3" + letter + "m" + letter + "\033[0;39m"
-}
-
-const (
-	positionX = 1 << iota
-	positionNX
-	positionY
-	positionNY
-	positionZ
-	positionNZ
-	positionV
-	positionNV
-)
-
-const (
-	maskPositionX = 3 << (2 * iota)
-	maskPositionY
-	maskPositionZ
-	maskPositionV
-)
-
-// Colors
-const (
-	ColorBlack color = iota
-	ColorRed
-	ColorGreen
-	ColorYellow
-	ColorBlue
-	ColorMagenta
-	ColorCyan
-	ColorWhite
-	colorEnd
-	colorBase
-)
-
-// Color ...
-type Color struct {
-	color       color
-	orientation int
-}
+//    /        /        /
+// vertex--edge--vertex
+//   |      |       |   /
+//  edge---side---edge
+//   |      |       |   /
+// vertex--edge--vertex
+//
+//
 
 type box interface {
-	// GetCountColors() int
-	Move(direction int, increase bool)
+	Move(direction _Direction)
 	Get() string
 }
 
@@ -76,22 +25,32 @@ type Side struct {
 
 // Move description
 func (s *Side) Move(
-	direction int,
-	increase bool,
+	direction _Direction,
 ) {
-	inc := "increase"
-	if !increase {
-		inc = "decrease"
+	fmt.Printf("\nmove to %v\n", direction)
+
+	for ii := 0; ii < dimension; ii++ {
+		if direction = direction & _Direction(dimensionMask); direction == 0 {
+			fmt.Printf("not direction for move %v\n", direction)
+			return
+		}
 	}
-	fmt.Printf("move to %d to %s\n", direction, inc)
+
+	if direction&s.colors.orientation != 0 ||
+		direction.Reverse()&s.colors.orientation != 0 {
+		fmt.Printf("side box cann't move to this posistion curent %v move to %v\n", s.colors, direction)
+		// panic(fmt.Errorf("side box cann't move to this posistion curent %v move to %v", s.colors, direction))
+	}
+
 	fmt.Printf("OLD color: %v\n", s.colors)
 
+	s.colors.orientation = direction
 	fmt.Printf("NEW color: %v \n", s.colors)
 }
 
 // Get description
 func (s *Side) Get() string {
-	return fmt.Sprintf("color: %v ", s.colors)
+	return s.colors.String()
 }
 
 // Edge ...
@@ -100,14 +59,9 @@ type Edge struct {
 
 // Move description
 func (e *Edge) Move(
-	direction int,
-	increase bool,
+	direction _Direction,
 ) {
-	inc := "increase"
-	if !increase {
-		inc = "decrease"
-	}
-	fmt.Printf("move to %d to %s", direction, inc)
+	fmt.Printf("move to %08b\n", direction)
 }
 
 // Get description
@@ -124,11 +78,7 @@ func (v *Vertex) Move(
 	direction int,
 	increase bool,
 ) {
-	inc := "increase"
-	if !increase {
-		inc = "decrease"
-	}
-	fmt.Printf("move to %d to %s", direction, inc)
+	fmt.Printf("move to %08b\n", direction)
 }
 
 // Get description
