@@ -20,6 +20,7 @@ type box interface {
 }
 
 // Side ...
+// count Color must be 1
 type Side struct {
 	colors Color
 }
@@ -53,6 +54,7 @@ func (s *Side) Get() string {
 }
 
 // Edge ...
+// count Color must be equal the dimension-1
 type Edge struct {
 	colors []Color
 }
@@ -61,70 +63,39 @@ type Edge struct {
 func (e *Edge) Move(
 	plane _Plane,
 ) {
-	fmt.Printf("\nmove to %v\n", plane)
+	var status string
+
+	fmt.Print("move to ", plane, "\t\t")
 	if !plane.Check() {
 		fmt.Printf("wrong rotate plane %v\n", plane)
 		return
 	}
 
-	if len(e.colors) < 2 {
-		panic(fmt.Errorf("edge haven't 2 sides"))
+	if len(e.colors) != dimension-1 {
+		panic(fmt.Errorf("edge haven't %d sides", dimension-1))
 	}
 
-	fmt.Println("OLD:", e.Get())
+	fmt.Print("OLD:", e.Get(), "\t\t")
 
-	inner0 := -1
-	inner1 := -1
-	for ii := range e.colors {
-		//  /   /   /
-		// *---*---*
-		// |   |   | /        ^         ^ -->
-		// *---*---X      -->/    or   /       isn't correct
-		// |   |   | /
-		// *---*---*
-		//
-		// если блок показывает цыет в какую-то сторону, то это крайнее положение
-		// нельзя двигать бокс дальше в этом направлении
-		if plane[0]&e.colors[ii].orientation != 0 ||
-			plane[1]&e.colors[ii].orientation != 0 {
-			fmt.Printf("edge box cann't move to this posistion curent %v move to %v\n", e.Get(), plane)
-			return
-		}
+	index0, index1, canMove := checkMove(plane, e.colors)
 
-		//  /   /   /   inner                /   /   /  outer          Y
-		// *---*---*                        *---X---*                  ^   ^ Z
-		// |   |   | /        ^             |   |   | /       ^        |  /
-		// X---*---*      -->/      else    *---*---*     -->/         | /
-		// |   |   | /                      |   |   | /                |/
-		// *---*---*                        *---X---*                  *------> X
-		//
-		// X+ Z+                               X+ Z+
-		// !X , !Z -> !Z , X
-		//  ^    ^ inner1
-		//  inner0   because move order
-		if e.colors[ii].orientation&plane[0].Reverse() != 0 {
-			inner0 = ii
-		}
-		if e.colors[ii].orientation&plane[1].Reverse() != 0 {
-			inner1 = ii
-		}
+	if !canMove || (index0 != -1 && index1 == -1) {
+		status = fmt.Sprintf("edge box cann't move to this posistion curent %v move to %v\t", e.Get(), plane)
+	} else {
+		status = "OK"
 	}
 
-	if inner0 != -1 && inner1 != -1 {
-		e.colors[inner0].orientation, e.colors[inner1].orientation = e.colors[inner1].orientation, plane[0]
-	} else if inner0 != -1 { // outer
-		// не может быть, потому что тогда это или полное попадание в область вращения
-		// или неправильное направление вращения
-		fmt.Printf("!!! inner0\n")
-	} else if inner1 != -1 { // outer
-		e.colors[inner1].orientation = plane[0]
+	if index0 != -1 && index1 != -1 {
+		e.colors[index0].orientation, e.colors[index1].orientation = e.colors[index1].orientation, plane[0]
+	} else if index1 != -1 { // outer
+		e.colors[index1].orientation = plane[0]
 	} else {
 		// nothing
 		// need change sides only at the rotating plane
 
 	}
 
-	fmt.Println("NEW:", e.Get())
+	fmt.Println("NEW:", e.Get(), "\t\t", status)
 
 }
 
@@ -144,6 +115,7 @@ func (e *Edge) Get() string {
 }
 
 // Vertex ...
+// count Color must be equal the dimension-1
 type Vertex struct {
 	colors []Color
 }
@@ -152,10 +124,40 @@ type Vertex struct {
 func (v *Vertex) Move(
 	plane _Plane,
 ) {
-	fmt.Printf("\nmove to %v\n", plane)
+	var status string
+
+	fmt.Print("move to ", plane, "\t\t")
 	if !plane.Check() {
+		fmt.Printf("wrong rotate plane %v\n", plane)
 		return
 	}
+
+	if len(v.colors) != dimension {
+		panic(fmt.Errorf("edge haven't %v sides", dimension))
+	}
+
+	fmt.Print("OLD:", v.Get(), "\t\t")
+
+	index0, index1, canMove := checkMove(plane, v.colors)
+
+	if !canMove || (index0 != -1 && index1 == -1) {
+		status = fmt.Sprintf("edge box cann't move to this posistion curent %v move to %v\t", v.Get(), plane)
+	} else {
+		status = "OK"
+	}
+
+	if index0 != -1 && index1 != -1 {
+		v.colors[index0].orientation, v.colors[index1].orientation = v.colors[index1].orientation, plane[0]
+	} else if index1 != -1 { // outer
+		v.colors[index1].orientation = plane[0]
+	} else {
+		// nothing
+		// need change sides only at the rotating plane
+
+	}
+
+	fmt.Println("NEW:", v.Get(), "\t\t", status)
+
 }
 
 // Get description
@@ -171,4 +173,54 @@ func (v *Vertex) Get() string {
 	builder.WriteString("]")
 
 	return builder.String()
+}
+
+func checkMove(
+	plane _Plane,
+	colors []Color,
+) (
+	index0 int,
+	index1 int,
+	canMove bool,
+) {
+	index0, index1 = -1, -1
+	notP0 := plane[0].Reverse()
+	notP1 := plane[1].Reverse()
+
+	for ii := range colors {
+
+		//  /   /   /
+		// *---*---*
+		// |   |   | /        ^         ^ -->
+		// *---*---X      -->/    or   /       isn't correct
+		// |   |   | /
+		// *---*---*
+		//
+		// если блок показывает цыет в какую-то сторону, то это крайнее положение
+		// нельзя двигать бокс дальше в этом направлении
+		if colors[ii].orientation == plane[0] ||
+			colors[ii].orientation == plane[1] {
+			return index0, index1, false
+		}
+
+		//  /   /   /   inner                /   /   /  outer          Y
+		// *---*---*                        *---X---*                  ^   ^ Z
+		// |   |   | /        ^             |   |   | /       ^        |  /
+		// X---*---*      -->/      else    *---*---*     -->/         | /
+		// |   |   | /                      |   |   | /                |/
+		// *---*---*                        *---X---*                  *------> X
+		//
+		// X+ Z+                               X+ Z+
+		// !X , !Z -> !Z , X
+		//  ^    ^ inner1
+		//  inner0   because move order
+		if colors[ii].orientation == notP0 {
+			index0 = ii
+		}
+		if colors[ii].orientation == notP1 {
+			index1 = ii
+		}
+	}
+
+	return index0, index1, true
 }
