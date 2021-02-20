@@ -14,7 +14,8 @@ import (
 //
 //
 
-type box interface {
+// Box ...
+type Box interface {
 	Move(plane _Plane) error
 	Get() string
 }
