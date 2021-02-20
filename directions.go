@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 // 3    1    2
 //  V   Y   Z
 //   ^  ^  ^
@@ -86,12 +88,12 @@ func (d _Direction) Reverse() _Direction {
 }
 
 // Проверка корректного состаяния вектора направления
-func (d _Direction) Check() bool {
+func (d _Direction) Check() error {
 
 	// вектор должен быть в текущей размерности
 	d &= _Direction(dimensionMask)
 	if d == 0 {
-		return false
+		return ErrWrongDimention
 	}
 
 	// вектор должен указывать только по одной из координат
@@ -103,20 +105,24 @@ func (d _Direction) Check() bool {
 		d >>= 1
 	}
 
-	return cnt == 1
+	if cnt != 1 {
+		return fmt.Errorf("direction dimention must be 1, %w", ErrWrongDimention)
+	}
+
+	return nil
 }
 
 // _Plane пока для представления плоскости вращения
 // возможно потом появятся и другие назначения
 type _Plane [2]_Direction
 
-func (p _Plane) Check() bool {
+func (p _Plane) Check() error {
 
 	// сонаправленные векторы не дают однозначной плоскости
 	// оба вектора находятся в одной координате и указывают в одном направлении
 	//  аля X+ X+
 	if p[0]&p[1] != 0 {
-		return false
+		return ErrWrongDirection
 	}
 
 	// параллельные разнонаправленные векторы не дают однозначной плоскости
@@ -125,8 +131,13 @@ func (p _Plane) Check() bool {
 	xor := p[0] ^ p[1]
 	for ii := 0; ii < dimension; ii++ {
 		if xor == directions[ii] {
-			return false
+			return ErrWrongDirection
 		}
 	}
-	return p[0].Check() && p[1].Check()
+
+	if err1, err2 := p[0].Check(), p[1].Check(); err1 != nil || err2 != nil {
+		return fmt.Errorf("%v: %w", p, ErrWrongDirection)
+	}
+
+	return nil
 }
