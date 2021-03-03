@@ -32,7 +32,8 @@ func (box *Side) Move(
 ) (
 	err error,
 ) {
-	fmt.Printf("move to %v\t\t", plane)
+	defer debugPrintln("")
+	debugPrintf("move to %v\t\t", plane)
 	if err = plane.Check(); err != nil {
 		return fmt.Errorf("%w: plane %v", err, plane)
 	}
@@ -44,14 +45,14 @@ func (box *Side) Move(
 		err = fmt.Errorf("%v %w: curent %v move to %v", "side", ErrMove, box.colors, plane)
 	}
 
-	fmt.Printf("OLD color: %v\t\t", box.Get())
+	debugPrintf("OLD color: %v\t\t", box.Get())
 
 	if index1 != -1 {
 		box.colors.orientation = plane[0]
 
 	}
 
-	fmt.Printf("NEW color: %v \t\t%v\n", box.Get(), err)
+	debugPrintf("NEW color: %v \t\t%v", box.Get(), err)
 	return err
 }
 
@@ -72,8 +73,8 @@ func (box *Edge) Move(
 ) (
 	err error,
 ) {
-
-	fmt.Print("move to ", plane, "\t\t")
+	defer debugPrintln("")
+	debugPrint("move to ", plane, "\t\t")
 	if err = plane.Check(); err != nil {
 		return fmt.Errorf("%w: plane %v", err, plane)
 	}
@@ -82,7 +83,7 @@ func (box *Edge) Move(
 		panic(fmt.Errorf("edge haven't %d sides", dimension-1))
 	}
 
-	fmt.Print("OLD:", box.Get(), "\t\t")
+	debugPrint("OLD:", box.Get(), "\t\t")
 
 	index0, index1, err := checkMove(plane, box.colors)
 	if err != nil {
@@ -98,7 +99,7 @@ func (box *Edge) Move(
 		box.colors[index1].orientation = plane[0]
 	}
 
-	fmt.Println("NEW:", box.Get(), "\t", index0, index1, "\t", err)
+	debugPrint("NEW:", box.Get(), "\t", index0, index1, "\t", err)
 	return err
 
 }
@@ -130,11 +131,11 @@ func (box *Vertex) Move(
 ) (
 	err error,
 ) {
-
-	fmt.Print("move to ", plane, "\t\t")
+	defer debugPrintln("")
+	debugPrint("move to ", plane, "\t\t")
 	if err = plane.Check(); err != nil {
 		err := fmt.Errorf("%w: plane %v", err, plane)
-		fmt.Println(err)
+		debugPrint(err)
 		return err
 	}
 
@@ -142,7 +143,7 @@ func (box *Vertex) Move(
 		panic(fmt.Errorf("edge haven't %v sides", dimension))
 	}
 
-	fmt.Print("OLD:", box.Get(), "\t\t")
+	debugPrint("OLD:", box.Get(), "\t\t")
 
 	index0, index1, err := checkMove(plane, box.colors)
 	if err != nil {
@@ -157,7 +158,7 @@ func (box *Vertex) Move(
 		box.colors[index1].orientation = plane[0]
 	}
 
-	fmt.Println("NEW:", box.Get(), "\t", index0, index1, "\t", err)
+	debugPrint("NEW:", box.Get(), "\t", index0, index1, "\t", err)
 	return err
 }
 
