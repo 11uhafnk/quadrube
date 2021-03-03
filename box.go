@@ -88,10 +88,11 @@ func (box *Edge) Move(
 	index0, index1, err := checkMove(plane, box.colors)
 	if err != nil {
 		err = fmt.Errorf("%v %w: curent %v move to %v", "edge", err, box.colors, plane)
+		return
 	} else if index0 != -1 && index1 == -1 {
 		err = fmt.Errorf("%v %w: curent %v move to %v", "edge", ErrMove, box.colors, plane)
+		return
 	}
-	err = fmt.Errorf("%d, %d, %w", index0, index1, err)
 
 	if index0 != -1 && index1 != -1 {
 		box.colors[index0].orientation, box.colors[index1].orientation = box.colors[index1].orientation, plane[0]
@@ -148,8 +149,10 @@ func (box *Vertex) Move(
 	index0, index1, err := checkMove(plane, box.colors)
 	if err != nil {
 		err = fmt.Errorf("%v %w: curent %v move to %v", "vertex", err, box.colors, plane)
+		return
 	} else if index0 != -1 && index1 == -1 {
 		err = fmt.Errorf("%v %w: curent %v move to %v", "vertex", ErrMove, box.colors, plane)
+		return
 	}
 
 	if index0 != -1 && index1 != -1 {
