@@ -29,7 +29,14 @@ func getPosition(
 	}
 
 	for ii := 0; ii < dimension; ii++ {
+		if coords[ii] >= dimension {
+			return -2
+		}
 		coord += int(math.Pow(float64(size), float64(ii))) * coords[ii]
+	}
+
+	if coord >= int(math.Pow(float64(size), float64(dimension))) {
+		return -3
 	}
 
 	return coord
