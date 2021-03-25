@@ -1,3 +1,4 @@
+//
 package main
 
 import (
@@ -6,6 +7,21 @@ import (
 )
 
 func TestSideMove(t *testing.T) {
+	t.Parallel()
+
+	testMove := func(t *testing.T, b Box, to _Plane, b2 Box, err error) {
+		from := b.Get()
+		err2 := b.Move(to)
+		if !errors.Is(err2, err) {
+			t.Errorf("%v to %v ) WANT ERR: %v GOT %v", from, to, err, err2)
+		}
+		// if err != nil {
+		// 	return
+		// }
+		if b.Get() != b2.Get() {
+			t.Errorf("%v to %v ) WANT %v GOT %v", from, to, b2.Get(), b.Get())
+		}
+	}
 
 	testMove(t,
 		&Side{Color{color: ColorRed, orientation: directionNX}},
@@ -181,6 +197,21 @@ func TestSideMove(t *testing.T) {
 }
 
 func TestEdgeMove(t *testing.T) {
+	t.Parallel()
+
+	testMove := func(t *testing.T, b Box, to _Plane, b2 Box, err error) {
+		from := b.Get()
+		err2 := b.Move(to)
+		if !errors.Is(err2, err) {
+			t.Errorf("%v to %v ) WANT ERR: %v GOT %v", from, to, err, err2)
+		}
+		// if err != nil {
+		// 	return
+		// }
+		if b.Get() != b2.Get() {
+			t.Errorf("%v to %v ) WANT %v GOT %v", from, to, b2.Get(), b.Get())
+		}
+	}
 
 	testMove(t,
 		&Edge{[]Color{{ColorRed, directionNX}, {ColorGreen, directionNY}}},
@@ -200,6 +231,20 @@ func TestEdgeMove(t *testing.T) {
 		&Edge{[]Color{{ColorRed, directionNX}, {ColorGreen, directionNY}}},
 		ErrWrongDirection,
 	)
+
+	func() {
+		defer func() {
+			if err := recover(); err == nil {
+				t.Errorf("haven't panic")
+			}
+		}()
+		testMove(t,
+			&Edge{[]Color{{ColorRed, directionNX}}},
+			_Plane{directionNX, directionY},
+			&Edge{[]Color{{ColorRed, directionNX}}},
+			ErrWrongDirection,
+		)
+	}()
 
 	// X
 	testMove(t,
@@ -356,6 +401,21 @@ func TestEdgeMove(t *testing.T) {
 }
 
 func TestVertexMove(t *testing.T) {
+	t.Parallel()
+
+	testMove := func(t *testing.T, b Box, to _Plane, b2 Box, err error) {
+		from := b.Get()
+		err2 := b.Move(to)
+		if !errors.Is(err2, err) {
+			t.Errorf("%v to %v ) WANT ERR: %v GOT %v", from, to, err, err2)
+		}
+		// if err != nil {
+		// 	return
+		// }
+		if b.Get() != b2.Get() {
+			t.Errorf("%v to %v ) WANT %v GOT %v", from, to, b2.Get(), b.Get())
+		}
+	}
 
 	testMove(t,
 		&Vertex{[]Color{{ColorRed, directionNX}, {ColorGreen, directionNY}, {ColorBlue, directionNZ}}},
@@ -528,18 +588,4 @@ func TestVertexMove(t *testing.T) {
 		&Vertex{[]Color{{ColorRed, directionNX}, {ColorGreen, directionNY}, {ColorBlue, directionNZ}}},
 		ErrMove,
 	)
-}
-
-func testMove(t *testing.T, b Box, to _Plane, b2 Box, err error) {
-	from := b.Get()
-	err2 := b.Move(to)
-	if !errors.Is(err2, err) {
-		t.Errorf("%v to %v ) WANT ERR: %v GOT %v", from, to, err, err2)
-	}
-	// if err != nil {
-	// 	return
-	// }
-	if b.Get() != b2.Get() {
-		t.Errorf("%v to %v ) WANT %v GOT %v", from, to, b2.Get(), b.Get())
-	}
 }

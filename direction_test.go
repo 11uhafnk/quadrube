@@ -14,6 +14,7 @@ func BenchmarkCheck1(b *testing.B) {
 }
 
 func TestDirectionReverse(t *testing.T) {
+	t.Parallel()
 
 	check := func(
 		check _Direction,
@@ -35,6 +36,8 @@ func TestDirectionReverse(t *testing.T) {
 }
 
 func TestDirectionCheck(t *testing.T) {
+	t.Parallel()
+
 	check := func(d _Direction, want error) {
 		err := d.Check()
 		if err != want && !errors.Is(err, want) {
@@ -51,6 +54,8 @@ func TestDirectionCheck(t *testing.T) {
 }
 
 func TestPlaneCheck(t *testing.T) {
+	t.Parallel()
+
 	check := func(p _Plane, want error) {
 		err := p.Check()
 		if err != want && !errors.Is(err, want) {
