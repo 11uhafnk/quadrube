@@ -141,3 +141,50 @@ func (p _Plane) Check() error {
 
 	return nil
 }
+
+// ReDirection возвращает направление вращения в той же плоскости
+// но в удомном виде для указанной позиции
+func (p _Plane) ReDirection(coords []int) (_Plane, error) {
+	minPos := 0
+	maxPos := dimension - 1
+
+	dirs := make([]_Direction, dimension)
+
+	touchSides := 0
+	for ii := range coords {
+		coord := coords[ii]
+		if coord == minPos {
+			dirs[ii] = directionNX
+			touchSides++
+		} else if coord == maxPos {
+			dirs[ii] = directionX
+			touchSides++
+		}
+	}
+
+	switch touchSides {
+
+	// координаты не касаются сторон
+	// так что без разницы
+	case 0:
+		return p, nil // err ?
+
+	// это элемент стороны а значит
+	// направление вращения должно начинаться со направления где находится данных блок
+	// если блок находится на плоскости вращения ( ни один из векторов вращения
+	// не совпадает со стороной касания ) то без разницы?
+	case 1:
+
+		// ребро
+		// первый вектор вращения должне быть вдоль плоскости касания
+	case dimension - 1:
+
+	// угол
+	case dimension:
+
+		//
+	default:
+	}
+
+	return _Plane{}, nil
+}
