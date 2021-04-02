@@ -144,24 +144,14 @@ func (p _Plane) Check() error {
 
 // ReDirection возвращает направление вращения в той же плоскости
 // но в удомном виде для указанной позиции
-func (p _Plane) ReDirection(coords []int) (_Plane, error) {
-	minPos := 0
-	maxPos := dimension - 1
+func (p _Plane) ReDirection(
+	coords []int,
+) (
+	_Plane,
+	error,
+) {
 
-	dirs := make([]_Direction, dimension)
-
-	touchSides := 0
-	for ii := range coords {
-		coord := coords[ii]
-		if coord == minPos {
-			dirs[ii] = directionNX
-			touchSides++
-		} else if coord == maxPos {
-			dirs[ii] = directionX
-			touchSides++
-		}
-	}
-
+	touchSides, dirs := getTouchSides(coords)
 	switch touchSides {
 
 	// координаты не касаются сторон
@@ -175,8 +165,8 @@ func (p _Plane) ReDirection(coords []int) (_Plane, error) {
 	// не совпадает со стороной касания ) то без разницы?
 	case 1:
 
-		// ребро
-		// первый вектор вращения должне быть вдоль плоскости касания
+	// ребро
+	// первый вектор вращения должне быть вдоль плоскости касания
 	case dimension - 1:
 
 	// угол
@@ -187,4 +177,28 @@ func (p _Plane) ReDirection(coords []int) (_Plane, error) {
 	}
 
 	return _Plane{}, nil
+}
+
+func getTouchSides(
+	coords []int,
+) (
+	touchSides int,
+	dirs []_Direction,
+) {
+	minPos := 0
+	maxPos := dimension - 1
+
+	dirs = make([]_Direction, dimension)
+
+	for ii := range coords {
+		coord := coords[ii]
+		if coord == minPos {
+			dirs[ii] = directionNX
+			touchSides++
+		} else if coord == maxPos {
+			dirs[ii] = directionX
+			touchSides++
+		}
+	}
+	return
 }
