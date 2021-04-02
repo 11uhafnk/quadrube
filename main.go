@@ -12,7 +12,6 @@ func panicOnError(err error) {
 
 func main() {
 
-
 	fmt.Printf("\n")
 
 	fmt.Println("end")

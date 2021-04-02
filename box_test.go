@@ -436,6 +436,20 @@ func TestVertexMove(t *testing.T) {
 		ErrWrongDirection,
 	)
 
+	func() {
+		defer func() {
+			if err := recover(); err == nil {
+				t.Errorf("haven't panic")
+			}
+		}()
+		testMove(t,
+			&Vertex{[]Color{{ColorRed, directionNX}}},
+			_Plane{directionNX, directionY},
+			&Vertex{[]Color{{ColorRed, directionNX}}},
+			ErrWrongDirection,
+		)
+	}()
+
 	// X
 	testMove(t,
 		&Vertex{[]Color{{ColorRed, directionNX}, {ColorGreen, directionNY}, {ColorBlue, directionNZ}}},

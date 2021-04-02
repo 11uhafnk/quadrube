@@ -150,15 +150,10 @@ func (box *Vertex) Move(
 	if err != nil {
 		err = fmt.Errorf("%v %w: curent %v move to %v", "vertex", err, box.colors, plane)
 		return
-	} else if index0 != -1 && index1 == -1 {
-		err = fmt.Errorf("%v %w: curent %v move to %v", "vertex", ErrMove, box.colors, plane)
-		return
 	}
 
 	if index0 != -1 && index1 != -1 {
 		box.colors[index0].orientation, box.colors[index1].orientation = box.colors[index1].orientation, plane[0]
-	} else if index1 != -1 { // outer
-		box.colors[index1].orientation = plane[0]
 	}
 
 	debugPrint("NEW:", box.Get(), "\t", index0, index1, "\t", err)
@@ -227,5 +222,6 @@ func checkMove(
 		}
 	}
 
+	fmt.Println(index0, index1, plane, colors)
 	return index0, index1, nil
 }
