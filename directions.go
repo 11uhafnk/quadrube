@@ -11,19 +11,19 @@ import "fmt"
 
 var (
 	// размерность
-	dimension = 3
+	_Dimension = 3
 
 	// маска для проверки принадлежности текущей размерности
-	dimensionMask = 0
+	_DimensionMask = 0
 
 	// размер кубика в боксах
-	size = 2
+	_Size = 2
 )
 
 // инициализация маски размерности
 func init() {
-	for ii := 0; ii < dimension; ii++ {
-		dimensionMask |= int(directions[ii])
+	for ii := 0; ii < _Dimension; ii++ {
+		_DimensionMask |= int(directions[ii])
 	}
 }
 
@@ -60,7 +60,7 @@ func (d _Direction) String() string {
 		return "none"
 	}
 	result := ""
-	for ii := 0; ii < dimension; ii++ {
+	for ii := 0; ii < _Dimension; ii++ {
 		if d&maskDirectionX != 0 {
 			result += directionLetters[ii : ii+1]
 			if d&directionX != 0 {
@@ -78,7 +78,7 @@ func (d _Direction) String() string {
 
 // Reverse меняет направление вектора на противоположное
 func (d _Direction) Reverse() _Direction {
-	for ii := 0; ii < dimension; ii++ {
+	for ii := 0; ii < _Dimension; ii++ {
 		if d&directions[ii] != 0 {
 			d ^= directions[ii]
 		}
@@ -91,14 +91,14 @@ func (d _Direction) Reverse() _Direction {
 func (d _Direction) Check() error {
 
 	// вектор должен быть в текущей размерности
-	d &= _Direction(dimensionMask)
+	d &= _Direction(_DimensionMask)
 	if d == 0 {
 		return ErrWrongDimention
 	}
 
 	// вектор должен указывать только по одной из координат
 	cnt := 0
-	for ii := 0; ii < dimension*2; ii++ {
+	for ii := 0; ii < _Dimension*2; ii++ {
 		if d&directionX != 0 {
 			cnt++
 		}
@@ -129,7 +129,7 @@ func (p _Plane) Check() error {
 	// оба вектора находятся в одной координате хоть и указывают в ранзых направлениях
 	//  аля X+ X-
 	xor := p[0] ^ p[1]
-	for ii := 0; ii < dimension; ii++ {
+	for ii := 0; ii < _Dimension; ii++ {
 		if xor == directions[ii] {
 			return ErrWrongDirection
 		}
@@ -174,7 +174,7 @@ func (p _Plane) ReDirection(
 
 		// ребро
 	// первый вектор вращения должне быть в плоскости касания
-	case dimension - 1:
+	case _Dimension - 1:
 
 		if dirs&p[0] != 0 && dirs&p[1] == 0 {
 			return _Plane{p[1], p[0].Reverse()}
@@ -187,7 +187,7 @@ func (p _Plane) ReDirection(
 		}
 
 	// угол
-	case dimension:
+	case _Dimension:
 
 		if dirs&p[0] != 0 && dirs&p[1].Reverse() != 0 {
 			return _Plane{p[1], p[0].Reverse()}
@@ -210,7 +210,7 @@ func getTouchSides(
 	dirs _Direction,
 ) {
 	minPos := 0
-	maxPos := size - 1
+	maxPos := _Size - 1
 
 	// dirs = make([]_Direction, dimension)
 

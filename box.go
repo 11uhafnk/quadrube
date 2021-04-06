@@ -79,8 +79,8 @@ func (box *Edge) Move(
 		return fmt.Errorf("%w: plane %v", err, plane)
 	}
 
-	if len(box.colors) != dimension-1 {
-		panic(fmt.Errorf("edge haven't %d sides", dimension-1))
+	if len(box.colors) != _Dimension-1 {
+		panic(fmt.Errorf("edge haven't %d sides", _Dimension-1))
 	}
 
 	debugPrint("OLD:", box.Get(), "\t\t")
@@ -140,8 +140,8 @@ func (box *Vertex) Move(
 		return err
 	}
 
-	if len(box.colors) != dimension {
-		panic(fmt.Errorf("edge haven't %v sides", dimension))
+	if len(box.colors) != _Dimension {
+		panic(fmt.Errorf("edge haven't %v sides", _Dimension))
 	}
 
 	debugPrint("OLD:", box.Get(), "\t\t")

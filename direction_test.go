@@ -82,8 +82,8 @@ func TestGetTouchSides(t *testing.T) {
 		}
 	}
 
-	size = 3
-	dimension = 3
+	_Size = 3
+	_Dimension = 3
 	check([]int{1, 1, 1}, 0, 0)
 
 	check([]int{0, 1, 1}, 1, directionNX)
@@ -96,13 +96,13 @@ func TestGetTouchSides(t *testing.T) {
 	check([]int{1, 0, 0}, 2, directionNY|directionNZ)
 	check([]int{0, 0, 0}, 3, directionNX|directionNY|directionNZ)
 
-	dimension = 4
+	_Dimension = 4
 	check([]int{1, 1, 1, 1}, 0, 0)
 	check([]int{1, 1, 1, 0}, 1, directionNV)
 	check([]int{1, 1, 1, 2}, 1, directionV)
 	check([]int{0, 0, 0, 0}, 4, directionNX|directionNY|directionNZ|directionNV)
 
-	dimension = 3
+	_Dimension = 3
 }
 
 func TestReDirection(t *testing.T) {
@@ -119,11 +119,11 @@ func TestReDirection(t *testing.T) {
 		}
 	}
 
-	size = 3
-	dimension = 4
+	_Size = 3
+	_Dimension = 4
 	check([]int{1, 1, 0, 0}, _Plane{})
 
-	dimension = 3
+	_Dimension = 3
 
 	check([]int{1, 1, 1}, _Plane{directionX, directionY})
 
