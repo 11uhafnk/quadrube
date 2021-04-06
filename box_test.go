@@ -7,7 +7,6 @@ import (
 )
 
 func TestSideMove(t *testing.T) {
-	t.Parallel()
 
 	testMove := func(t *testing.T, b Box, to _Plane, b2 Box, err error) {
 		from := b.Get()
@@ -197,7 +196,6 @@ func TestSideMove(t *testing.T) {
 }
 
 func TestEdgeMove(t *testing.T) {
-	t.Parallel()
 
 	testMove := func(t *testing.T, b Box, to _Plane, b2 Box, err error) {
 		from := b.Get()
@@ -401,7 +399,6 @@ func TestEdgeMove(t *testing.T) {
 }
 
 func TestVertexMove(t *testing.T) {
-	t.Parallel()
 
 	testMove := func(t *testing.T, b Box, to _Plane, b2 Box, err error) {
 		from := b.Get()

@@ -146,57 +146,80 @@ func (p _Plane) Check() error {
 // но в удомном виде для указанной позиции
 func (p _Plane) ReDirection(
 	coords []int,
-) (
-	_Plane,
-	error,
-) {
-
+) _Plane {
 	touchSides, dirs := getTouchSides(coords)
+	_ = dirs
 	switch touchSides {
 
 	// координаты не касаются сторон
 	// так что без разницы
 	case 0:
-		return p, nil // err ?
+		return p
 
 	// это элемент стороны а значит
-	// направление вращения должно начинаться со направления где находится данных блок
+	// направление вращения должно начинаться с направления лежащего в плоскости стороны где находится данный блок
 	// если блок находится на плоскости вращения ( ни один из векторов вращения
 	// не совпадает со стороной касания ) то без разницы?
 	case 1:
 
-	// ребро
-	// первый вектор вращения должне быть вдоль плоскости касания
+		if dirs&p[0] != 0 {
+			return _Plane{p[1], p[0].Reverse()}
+		} else if dirs&p[0].Reverse() != 0 {
+			return _Plane{p[1].Reverse(), p[0]}
+		} else if dirs&p[1] != 0 {
+			return _Plane{p[0].Reverse(), p[1].Reverse()}
+		} else {
+			return p
+		}
+
+		// ребро
+	// первый вектор вращения должне быть в плоскости касания
 	case dimension - 1:
+
+		if dirs&p[0] != 0 && dirs&p[1] == 0 {
+			return _Plane{p[1], p[0].Reverse()}
+		} else if dirs&p[0].Reverse() != 0 && dirs&p[1].Reverse() == 0 {
+			return _Plane{p[1].Reverse(), p[0]}
+		} else if dirs&p[1] != 0 && dirs&p[0].Reverse() == 0 {
+			return _Plane{p[0].Reverse(), p[1].Reverse()}
+		} else if dirs&p[1].Reverse() != 0 && dirs&p[0] == 0 {
+			return _Plane{p[0], p[1]}
+		}
 
 	// угол
 	case dimension:
 
-		//
-	default:
+		if dirs&p[0] != 0 && dirs&p[1].Reverse() != 0 {
+			return _Plane{p[1], p[0].Reverse()}
+		} else if dirs&p[0].Reverse() != 0 && dirs&p[1] != 0 {
+			return _Plane{p[1].Reverse(), p[0]}
+		} else if dirs&p[0] != 0 && dirs&p[1] != 0 {
+			return _Plane{p[0].Reverse(), p[1].Reverse()}
+		} else if dirs&p[0].Reverse() != 0 && dirs&p[1].Reverse() != 0 {
+			return _Plane{p[0], p[1]}
+		}
 	}
 
-	return _Plane{}, nil
+	return _Plane{}
 }
 
 func getTouchSides(
 	coords []int,
 ) (
 	touchSides int,
-	dirs []_Direction,
+	dirs _Direction,
 ) {
 	minPos := 0
-	maxPos := dimension - 1
+	maxPos := size - 1
 
-	dirs = make([]_Direction, dimension)
+	// dirs = make([]_Direction, dimension)
 
 	for ii := range coords {
-		coord := coords[ii]
-		if coord == minPos {
-			dirs[ii] = directionNX
+		if coords[ii] == minPos {
+			dirs |= directionNX << (ii * 2)
 			touchSides++
-		} else if coord == maxPos {
-			dirs[ii] = directionX
+		} else if coords[ii] == maxPos {
+			dirs |= directionX << (ii * 2)
 			touchSides++
 		}
 	}

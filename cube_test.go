@@ -5,7 +5,6 @@ import (
 )
 
 func TestCubeGetPosition(t *testing.T) {
-	t.Parallel()
 
 	check := func(coords []int, want int) {
 		have := getPosition(coords...)
