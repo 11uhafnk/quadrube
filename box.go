@@ -222,6 +222,6 @@ func checkMove(
 		}
 	}
 
-	fmt.Println(index0, index1, plane, colors)
+	debugPrintln(index0, index1, plane, colors)
 	return index0, index1, nil
 }
