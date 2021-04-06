@@ -26,16 +26,16 @@ func (c _Color) CLear() string {
 
 // Colors текущие доступные цвета
 const (
-	ColorBlack _Color = iota
-	ColorRed
-	ColorGreen
-	ColorYellow
-	ColorBlue
-	ColorMagenta
-	ColorCyan
-	ColorWhite
-	colorEnd
-	colorBase
+	ColorBlack   _Color = iota // 0
+	ColorRed                   // 1
+	ColorGreen                 // 2
+	ColorYellow                // 3
+	ColorBlue                  // 4
+	ColorMagenta               // 5
+	ColorCyan                  // 6
+	ColorWhite                 // 7
+	colorEnd                   //
+	colorBase                  // 9
 )
 
 // Color цветовая поверхность на блоке

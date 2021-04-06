@@ -112,6 +112,21 @@ func (d _Direction) Check() error {
 	return nil
 }
 
+func (d _Direction) Split() []_Direction {
+	result := make([]_Direction, 0, _Dimension)
+
+	for ii := 0; ii < _Dimension; ii++ {
+		if d&(directionX<<(ii*2)) != 0 {
+			result = append(result, d&(directionX<<(ii*2)))
+		}
+		if d&(directionNX<<(ii*2)) != 0 {
+			result = append(result, d&(directionNX<<(ii*2)))
+		}
+	}
+
+	return result
+}
+
 // _Plane пока для представления плоскости вращения
 // возможно потом появятся и другие назначения
 type _Plane [2]_Direction

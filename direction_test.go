@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"reflect"
 	"testing"
 )
 
@@ -155,4 +156,26 @@ func TestReDirection(t *testing.T) {
 	check([]int{0, 2, 2}, _Plane{directionNY, directionX})
 	check([]int{2, 2, 0}, _Plane{directionNX, directionNY})
 	check([]int{2, 2, 2}, _Plane{directionNX, directionNY})
+}
+
+func TestDirectionSplit(t *testing.T) {
+	check := func(d _Direction, want []_Direction) {
+		have := d.Split()
+		if !reflect.DeepEqual(have, want) {
+			t.Errorf("WANT %v HAVE %v", want, have)
+		}
+	}
+
+	check(0, []_Direction{})
+	check(directionX, []_Direction{directionX})
+	check(directionX|directionNX, []_Direction{directionX, directionNX})
+
+	check(directionX|directionY, []_Direction{directionX, directionY})
+	check(directionX|directionY|directionZ, []_Direction{directionX, directionY, directionZ})
+
+	_Dimension = 4
+	check(directionX|directionY|directionZ|directionV, []_Direction{directionX, directionY, directionZ, directionV})
+	_Dimension = 3
+	check(directionX|directionY|directionZ|directionV, []_Direction{directionX, directionY, directionZ})
+
 }

@@ -99,6 +99,11 @@ func TestFindIndexes(t *testing.T) {
 	check(_Plane{directionZ, directionNX}, 2, 0)
 }
 
+func TestInitCube(t *testing.T) {
+	InitCube(4, 4)
+	t.Error("")
+}
+
 // func TestMove(t *testing.T) {
 // 	check := func(start []Box, position []int, direction _Plane, want []Box) {
 // 		c := Cube{}

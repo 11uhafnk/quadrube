@@ -13,8 +13,8 @@ type Cube struct {
 }
 
 func InitCube(
-	size int,
 	dimension int,
+	size int,
 ) (
 	cube *Cube,
 ) {
@@ -25,6 +25,12 @@ func InitCube(
 		_DimensionMask |= int(directions[ii])
 	}
 
+	initColors := make(map[_Direction]_Color, _Dimension*2)
+	for ii := 0; ii < _Dimension; ii++ {
+		initColors[directionX<<(ii*2)] = _Color(ii * 2)
+		initColors[directionNX<<(ii*2)] = _Color(ii*2 + 1)
+	}
+
 	c := Cube{
 		arr: make([]Box, 0, arrLen),
 	}
@@ -33,9 +39,29 @@ func InitCube(
 		touchSides, dirs := getTouchSides(parsePosition(ii))
 		switch touchSides {
 		case 1:
-			c.arr[ii] = &Side{colors: Color{color: ColorRed, orientation: dirs}}
+			c.arr[ii] = &Side{colors: Color{color: initColors[dirs], orientation: dirs}}
 		case _Dimension - 1:
+			colors := make([]Color, 0, _Dimension-1)
+			for _, dir := range dirs.Split() {
+				colors = append(colors, Color{
+					color:       initColors[dir],
+					orientation: dir,
+				})
+			}
+			c.arr[ii] = &Edge{
+				colors: colors,
+			}
 		case _Dimension:
+			colors := make([]Color, 0, _Dimension-1)
+			for _, dir := range dirs.Split() {
+				colors = append(colors, Color{
+					color:       initColors[dir],
+					orientation: dir,
+				})
+			}
+			c.arr[ii] = &Vertex{
+				colors: colors,
+			}
 		}
 	}
 
