@@ -93,20 +93,41 @@ func (c *Cube) Print() {
 func (c *Cube) Move(
 	position []int,
 	direction _Plane,
-) {
+) error {
+	if len(position) != _Dimension {
+		return ErrWrongDimention
+	}
+
 	index0, index1 := findIndexes(direction)
 
-	var coords []int
+	coords := make([]int, len(position))
 	copy(coords, position)
+
+	moved := make(map[int]Box)
 
 	for ii := 0; ii < _Size; ii++ {
 		for jj := 0; jj < _Size; jj++ {
 			coords[index0] = ii
 			coords[index1] = jj
-			fmt.Printf("%v %d\t", coords, getPosition(coords...))
+			oldPos := getPosition(coords...)
+			dir := direction.ReDirection(coords)
+			fmt.Printf("%v %d %v\t", coords, oldPos, dir)
+
+			err := c.arr[oldPos].Move(direction.ReDirection(coords))
+			if err != nil {
+				return err
+			}
+
+			// moved[oldPos] = c.arr[oldPos]
 		}
 		fmt.Println("")
 	}
+
+	for pos := range moved {
+		fmt.Printf("%+v\n", moved[pos].Get())
+	}
+
+	return nil
 }
 
 func findIndexes(
@@ -137,7 +158,7 @@ func getPosition(
 	}
 
 	for ii := 0; ii < _Dimension; ii++ {
-		if coords[ii] >= _Dimension {
+		if coords[ii] >= _Size {
 			return -2
 		}
 		coord += int(math.Pow(float64(_Size), float64(ii))) * coords[ii]

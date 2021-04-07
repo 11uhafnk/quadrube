@@ -100,8 +100,8 @@ func TestFindIndexes(t *testing.T) {
 }
 
 func TestInitCube(t *testing.T) {
-	InitCube(4, 4)
-	t.Error("")
+	// InitCube(4, 4)
+	// t.Error("")
 }
 
 // func TestMove(t *testing.T) {
@@ -115,7 +115,8 @@ func TestInitCube(t *testing.T) {
 // 		// }
 // 	}
 
-// 	size = 3
-// 	dimension = 3
-// 	check()
+// 	c := InitCube(2, 2)
+// 	c.Print()
+// 	fmt.Println()
+// 	check(c.arr, []int{0, 0}, _Plane{directionX, directionY}, c.arr)
 // }
