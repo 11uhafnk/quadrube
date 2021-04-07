@@ -600,3 +600,21 @@ func TestVertexMove(t *testing.T) {
 		ErrMove,
 	)
 }
+
+func TestEmptyMove(t *testing.T) {
+	testMove := func(b Box, to _Plane, b2 Box, err error) {
+		from := b.Get()
+		err2 := b.Move(to)
+		if !errors.Is(err2, err) {
+			t.Errorf("%v to %v ) WANT ERR: %v GOT %v", from, to, err, err2)
+		}
+		// if err != nil {
+		// 	return
+		// }
+		if b.Get() != b2.Get() {
+			t.Errorf("%v to %v ) WANT %v GOT %v", from, to, b2.Get(), b.Get())
+		}
+	}
+
+	testMove(&Empty{}, _Plane{directionX, directionY}, &Empty{}, nil)
+}
