@@ -97,6 +97,7 @@ func (c *Cube) Move(
 	if len(position) != _Dimension {
 		return ErrWrongDimention
 	}
+	debugPrintf("Move %v to %v\n", position, direction)
 
 	index0, index1 := findIndexes(direction)
 
@@ -107,24 +108,31 @@ func (c *Cube) Move(
 
 	for ii := 0; ii < _Size; ii++ {
 		for jj := 0; jj < _Size; jj++ {
+			coords[index0] = _Size - 1 - jj
+			coords[index1] = ii
+			newPos := getPosition(coords...)
+			debugPrintf("%v %d <- ", coords, newPos)
+
 			coords[index0] = ii
 			coords[index1] = jj
 			oldPos := getPosition(coords...)
 			dir := direction.ReDirection(coords)
-			fmt.Printf("%v %d %v\t", coords, oldPos, dir)
+
+			debugPrintf("%v %d %v\t", coords, oldPos, dir)
 
 			err := c.arr[oldPos].Move(direction.ReDirection(coords))
 			if err != nil {
-				return err
+				return fmt.Errorf("move box %w", err)
 			}
 
-			// moved[oldPos] = c.arr[oldPos]
+			moved[newPos] = c.arr[oldPos]
 		}
-		fmt.Println("")
+		debugPrintln("")
 	}
 
 	for pos := range moved {
-		fmt.Printf("%+v\n", moved[pos].Get())
+		// fmt.Println(pos, moved[pos].Get())
+		c.arr[pos] = moved[pos]
 	}
 
 	return nil

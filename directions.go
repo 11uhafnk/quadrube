@@ -190,20 +190,6 @@ func (p _Plane) ReDirection(
 			return p
 		}
 
-		// ребро
-	// первый вектор вращения должне быть в плоскости касания
-	case _Dimension - 1:
-
-		if dirs&p[0] != 0 && dirs&p[1] == 0 {
-			return _Plane{p[1], p[0].Reverse()}
-		} else if dirs&p[0].Reverse() != 0 && dirs&p[1].Reverse() == 0 {
-			return _Plane{p[1].Reverse(), p[0]}
-		} else if dirs&p[1] != 0 && dirs&p[0].Reverse() == 0 {
-			return _Plane{p[0].Reverse(), p[1].Reverse()}
-		} else if dirs&p[1].Reverse() != 0 && dirs&p[0] == 0 {
-			return _Plane{p[0], p[1]}
-		}
-
 	// угол
 	case _Dimension:
 
@@ -216,9 +202,27 @@ func (p _Plane) ReDirection(
 		} else if dirs&p[0].Reverse() != 0 && dirs&p[1].Reverse() != 0 {
 			return _Plane{p[0], p[1]}
 		}
+
+	// ребро
+	// первый вектор вращения должне быть в плоскости касания
+	default:
+
+		if dirs&p[0] != 0 && dirs&p[1] == 0 {
+			return _Plane{p[1], p[0].Reverse()}
+		} else if dirs&p[0].Reverse() != 0 && dirs&p[1].Reverse() == 0 {
+			return _Plane{p[1].Reverse(), p[0]}
+		} else if dirs&p[1] != 0 && dirs&p[0].Reverse() == 0 {
+			return _Plane{p[0].Reverse(), p[1].Reverse()}
+		} else if dirs&p[1].Reverse() != 0 && dirs&p[0] == 0 {
+			return _Plane{p[0], p[1]}
+		}
 	}
 
 	return _Plane{}
+}
+
+func (p _Plane) IsPositive() bool {
+	return p[1] > p[0]
 }
 
 func getTouchSides(

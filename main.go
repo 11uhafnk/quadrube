@@ -11,15 +11,23 @@ func panicOnError(err error) {
 }
 
 func main() {
+	var err error
 
-	c := InitCube(3, 4)
+	c := InitCube(3, 3)
 
 	c.Print()
 	// fmt.Println("\n")
 
-	err := c.Move([]int{0, 0, 1}, _Plane{directionX, directionY})
-	panicOnError(err)
+	//	err = c.Move([]int{0, 0, 1}, _Plane{directionY, directionX})
+	//	panicOnError(err)
+	//	c.Print()
 
+	//	err = c.Move([]int{0, 0, 1}, _Plane{directionX, directionY})
+	//	panicOnError(err)
+	//	c.Print()
+
+	err = c.Move([]int{0, 0, 0}, _Plane{directionX, directionZ})
+	panicOnError(err)
 	c.Print()
 
 	fmt.Println("end")
