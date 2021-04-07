@@ -12,7 +12,9 @@ func panicOnError(err error) {
 
 func main() {
 
-	fmt.Printf("\n")
+	c := InitCube(5, 3)
+
+	c.Print()
 
 	fmt.Println("end")
 }

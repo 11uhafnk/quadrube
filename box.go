@@ -20,6 +20,23 @@ type Box interface {
 	Get() string
 }
 
+// Empty no touchSides
+type Empty struct{}
+
+// Move ...
+func (box *Empty) Move(
+	plane _Plane,
+) (
+	err error,
+) {
+	return nil
+}
+
+func (box *Empty) Get() string {
+	mask := fmt.Sprintf("%%%ds", _Dimension*4+2)
+	return fmt.Sprintf(mask, " ")
+}
+
 // Side ...
 // count Color must be 1
 type Side struct {
@@ -58,7 +75,9 @@ func (box *Side) Move(
 
 // Get description
 func (box *Side) Get() string {
-	return box.colors.String()
+
+	mask := fmt.Sprintf("%%%ds%%s%%%ds", (_Dimension-1)*2+2, (_Dimension-1)*2+2)
+	return fmt.Sprintf(mask, " ", box.colors.String(), " ")
 }
 
 // Edge ...
@@ -108,6 +127,9 @@ func (box *Edge) Move(
 // Get description
 func (box *Edge) Get() string {
 	builder := strings.Builder{}
+	for ii := 0; ii < _Dimension-len(box.colors); ii++ {
+		builder.WriteString("  ")
+	}
 	builder.WriteString("[ ")
 	for ii := range box.colors {
 		if ii != 0 {
@@ -115,7 +137,11 @@ func (box *Edge) Get() string {
 		}
 		builder.WriteString(box.colors[ii].String())
 	}
-	builder.WriteString("]")
+	builder.WriteString("] ")
+
+	for ii := 0; ii < _Dimension-len(box.colors); ii++ {
+		builder.WriteString("  ")
+	}
 
 	return builder.String()
 }
@@ -170,7 +196,7 @@ func (box *Vertex) Get() string {
 		}
 		builder.WriteString(box.colors[ii].String())
 	}
-	builder.WriteString("]")
+	builder.WriteString("] ")
 
 	return builder.String()
 }

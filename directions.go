@@ -40,6 +40,8 @@ const (
 	directionNZ
 	directionV
 	directionNV
+	directionW
+	directionNW
 )
 
 // вспомогательные маски для проверок принадлежности векторов направлений конкретные координаты
@@ -48,11 +50,12 @@ const (
 	maskDirectionY
 	maskDirectionZ
 	maskDirectionV
+	maskDirectionW
 )
 
-var directions = []_Direction{maskDirectionX, maskDirectionY, maskDirectionZ, maskDirectionV}
+var directions = []_Direction{maskDirectionX, maskDirectionY, maskDirectionZ, maskDirectionV, maskDirectionW}
 
-const directionLetters = "XYZV"
+const directionLetters = "XYZVW"
 
 // String предварительный красивый вывод вектора для консоли
 func (d _Direction) String() string {
