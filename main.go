@@ -16,6 +16,7 @@ func main() {
 	c := InitCube(3, 3)
 
 	c.Print()
+	c.selected = 13
 	// fmt.Println("\n")
 
 	//	err = c.Move([]int{0, 0, 1}, _Plane{directionY, directionX})

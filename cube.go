@@ -9,7 +9,8 @@ import (
 type Cube struct {
 	// it as [][][][]box
 	//        ^ deep as dimention
-	arr []Box
+	arr      []Box
+	selected int
 }
 
 func InitCube(
@@ -38,7 +39,8 @@ func InitCube(
 	}
 
 	c := Cube{
-		arr: make([]Box, arrLen),
+		arr:      make([]Box, arrLen),
+		selected: -1,
 	}
 
 	for ii := 0; ii < arrLen; ii++ {
@@ -84,7 +86,11 @@ func (c *Cube) Print() {
 				fmt.Println("")
 			}
 		}
-		fmt.Print(c.arr[ii].Get())
+		mask := "%s"
+		if ii == c.selected {
+			mask = "\033[40m%s\033[0;39m"
+		}
+		fmt.Printf(mask, c.arr[ii].Get())
 	}
 	fmt.Println("")
 }
