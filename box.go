@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -81,9 +82,9 @@ func (box *Side) Get() string {
 }
 
 // Edge ...
-// count Color must be equal the dimension-1
+// count Color must be beween from 1 to dimension
 type Edge struct {
-	colors []Color
+	colors SortColors
 }
 
 // Move description
@@ -119,6 +120,8 @@ func (box *Edge) Move(
 		box.colors[index1].orientation = plane[0]
 	}
 
+	sort.Sort(box.colors)
+
 	debugPrint("NEW:", box.Get(), "\t", index0, index1, "\t", err)
 	return err
 
@@ -149,7 +152,7 @@ func (box *Edge) Get() string {
 // Vertex ...
 // count Color must be equal the dimension-1
 type Vertex struct {
-	colors []Color
+	colors SortColors
 }
 
 // Move description
@@ -181,6 +184,8 @@ func (box *Vertex) Move(
 	if index0 != -1 && index1 != -1 {
 		box.colors[index0].orientation, box.colors[index1].orientation = box.colors[index1].orientation, plane[0]
 	}
+
+	sort.Sort(box.colors)
 
 	debugPrint("NEW:", box.Get(), "\t", index0, index1, "\t", err)
 	return err

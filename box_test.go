@@ -248,7 +248,7 @@ func TestEdgeMove(t *testing.T) {
 	testMove(t,
 		&Edge{[]Color{{ColorRed, directionNX}, {ColorGreen, directionNY}}},
 		_Plane{directionX, directionY},
-		&Edge{[]Color{{ColorRed, directionNY}, {ColorGreen, directionX}}},
+		&Edge{[]Color{{ColorGreen, directionX}, {ColorRed, directionNY}}},
 		nil,
 	)
 	testMove(t,
@@ -299,7 +299,7 @@ func TestEdgeMove(t *testing.T) {
 	testMove(t,
 		&Edge{[]Color{{ColorRed, directionNX}, {ColorGreen, directionNY}}},
 		_Plane{directionY, directionX},
-		&Edge{[]Color{{ColorRed, directionY}, {ColorGreen, directionNX}}},
+		&Edge{[]Color{{ColorGreen, directionNX}, {ColorRed, directionY}}},
 		nil,
 	)
 	testMove(t,
@@ -350,7 +350,7 @@ func TestEdgeMove(t *testing.T) {
 	testMove(t,
 		&Edge{[]Color{{ColorRed, directionNX}, {ColorGreen, directionNY}}},
 		_Plane{directionZ, directionX},
-		&Edge{[]Color{{ColorRed, directionZ}, {ColorGreen, directionNY}}},
+		&Edge{[]Color{{ColorGreen, directionNY}, {ColorRed, directionZ}}},
 		nil,
 	)
 	testMove(t,
@@ -375,7 +375,7 @@ func TestEdgeMove(t *testing.T) {
 	testMove(t,
 		&Edge{[]Color{{ColorRed, directionNX}, {ColorGreen, directionNY}}},
 		_Plane{directionNZ, directionX},
-		&Edge{[]Color{{ColorRed, directionNZ}, {ColorGreen, directionNY}}},
+		&Edge{[]Color{{ColorGreen, directionNY}, {ColorRed, directionNZ}}},
 		nil,
 	)
 	testMove(t,
@@ -451,7 +451,7 @@ func TestVertexMove(t *testing.T) {
 	testMove(t,
 		&Vertex{[]Color{{ColorRed, directionNX}, {ColorGreen, directionNY}, {ColorBlue, directionNZ}}},
 		_Plane{directionX, directionY},
-		&Vertex{[]Color{{ColorRed, directionNY}, {ColorGreen, directionX}, {ColorBlue, directionNZ}}},
+		&Vertex{[]Color{{ColorGreen, directionX}, {ColorRed, directionNY}, {ColorBlue, directionNZ}}},
 		nil,
 	)
 	testMove(t,
@@ -463,7 +463,7 @@ func TestVertexMove(t *testing.T) {
 	testMove(t,
 		&Vertex{[]Color{{ColorRed, directionNX}, {ColorGreen, directionNY}, {ColorBlue, directionNZ}}},
 		_Plane{directionX, directionZ},
-		&Vertex{[]Color{{ColorRed, directionNZ}, {ColorGreen, directionNY}, {ColorBlue, directionX}}},
+		&Vertex{[]Color{{ColorBlue, directionX}, {ColorGreen, directionNY}, {ColorRed, directionNZ}}},
 		nil,
 	)
 	testMove(t,
@@ -502,7 +502,7 @@ func TestVertexMove(t *testing.T) {
 	testMove(t,
 		&Vertex{[]Color{{ColorRed, directionNX}, {ColorGreen, directionNY}, {ColorBlue, directionNZ}}},
 		_Plane{directionY, directionX},
-		&Vertex{[]Color{{ColorRed, directionY}, {ColorGreen, directionNX}, {ColorBlue, directionNZ}}},
+		&Vertex{[]Color{{ColorGreen, directionNX}, {ColorRed, directionY}, {ColorBlue, directionNZ}}},
 		nil,
 	)
 	testMove(t,
@@ -514,7 +514,7 @@ func TestVertexMove(t *testing.T) {
 	testMove(t,
 		&Vertex{[]Color{{ColorRed, directionNX}, {ColorGreen, directionNY}, {ColorBlue, directionNZ}}},
 		_Plane{directionY, directionZ},
-		&Vertex{[]Color{{ColorRed, directionNX}, {ColorGreen, directionNZ}, {ColorBlue, directionY}}},
+		&Vertex{[]Color{{ColorRed, directionNX}, {ColorBlue, directionY}, {ColorGreen, directionNZ}}},
 		nil,
 	)
 	testMove(t,
@@ -553,7 +553,7 @@ func TestVertexMove(t *testing.T) {
 	testMove(t,
 		&Vertex{[]Color{{ColorRed, directionNX}, {ColorGreen, directionNY}, {ColorBlue, directionNZ}}},
 		_Plane{directionZ, directionX},
-		&Vertex{[]Color{{ColorRed, directionZ}, {ColorGreen, directionNY}, {ColorBlue, directionNX}}},
+		&Vertex{[]Color{{ColorBlue, directionNX}, {ColorGreen, directionNY}, {ColorRed, directionZ}}},
 		nil,
 	)
 	testMove(t,
@@ -565,7 +565,7 @@ func TestVertexMove(t *testing.T) {
 	testMove(t,
 		&Vertex{[]Color{{ColorRed, directionNX}, {ColorGreen, directionNY}, {ColorBlue, directionNZ}}},
 		_Plane{directionZ, directionY},
-		&Vertex{[]Color{{ColorRed, directionNX}, {ColorGreen, directionZ}, {ColorBlue, directionNY}}},
+		&Vertex{[]Color{{ColorRed, directionNX}, {ColorBlue, directionNY}, {ColorGreen, directionZ}}},
 		nil,
 	)
 	testMove(t,

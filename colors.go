@@ -50,3 +50,9 @@ type Color struct {
 func (c Color) String() string {
 	return c.color.Brush() + c.orientation.String() + c.color.CLear()
 }
+
+type SortColors []Color
+
+func (sc SortColors) Len() int           { return len(sc) }
+func (sc SortColors) Swap(i, j int)      { sc[i], sc[j] = sc[j], sc[i] }
+func (sc SortColors) Less(i, j int) bool { return sc[i].orientation < sc[j].orientation }
